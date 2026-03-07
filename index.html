@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Phishing Website Detection System</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+body{
+background:linear-gradient(135deg,#0f172a,#020617);
+font-family:Arial, Helvetica, sans-serif;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.container{
+background:#111827;
+padding:40px;
+border-radius:12px;
+width:520px;
+text-align:center;
+box-shadow:0px 0px 25px rgba(0,255,200,0.2);
+}
+
+h1{
+color:#22c55e;
+margin-bottom:25px;
+}
+
+input{
+width:90%;
+padding:14px;
+border-radius:8px;
+border:none;
+font-size:16px;
+outline:none;
+margin-bottom:20px;
+}
+
+button{
+padding:12px 30px;
+background:#22c55e;
+border:none;
+color:white;
+font-size:16px;
+border-radius:8px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#16a34a;
+transform:scale(1.05);
+}
+
+.result{
+margin-top:25px;
+font-size:22px;
+font-weight:bold;
+}
+
+/* Risk meter */
+
+.risk-bar-bg{
+width:100%;
+background:#374151;
+height:20px;
+border-radius:10px;
+overflow:hidden;
+margin-top:10px;
+}
+
+.risk-bar{
+height:20px;
+border-radius:10px;
+transition:0.4s;
+}
+
+/* Risk colors */
+
+.safe{
+background:#22c55e;
+}
+
+.warning{
+background:#facc15;
+}
+
+.danger{
+background:#ef4444;
+}
+
+/* Domain info box */
+
+.domain-box{
+margin-top:25px;
+background:#1f2937;
+padding:15px;
+border-radius:8px;
+text-align:left;
+}
+
+.domain-box h3{
+margin-top:0;
+color:#22c55e;
+}
+
+.footer{
+margin-top:25px;
+font-size:13px;
+color:#9ca3af;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1><i class="fa-solid fa-shield-halved"></i> Phishing URL Detector</h1>
+
+<form action="/predict" method="post">
+
+<input type="text"
+name="url"
+value="{{ url if url else '' }}"
+placeholder="Enter website URL (ex: https://google.com)"
+required>
+
+<br>
+
+<button type="submit">Check Website</button>
+
+</form>
+
+{% if prediction_text %}
+
+<div class="result">
+
+{{ prediction_text }}
+
+</div>
+
+{% endif %}
+
+{% if risk_score is not none %}
+
+<h3>Risk Score: {{ risk_score }}%</h3>
+
+<div class="risk-bar-bg">
+
+<div class="risk-bar 
+{% if risk_score <= 30 %}
+safe
+{% elif risk_score <= 60 %}
+warning
+{% else %}
+danger
+{% endif %}
+" style="width: {{ risk_score }}%;"></div>
+
+</div>
+
+{% endif %}
+
+{% if registrar %}
+
+<div class="domain-box">
+
+<h3>Domain Information</h3>
+
+<p><b>Registrar:</b> {{ registrar }}</p>
+
+<p><b>Creation Date:</b> {{ creation_date }}</p>
+
+<p><b>Domain Age:</b> {{ domain_age }} years</p>
+
+</div>
+
+{% endif %}
+
+<div class="footer">
+
+Machine Learning Powered Phishing Detection System
+
+</div>
+
+</div>
+
+</body>
+</html>
